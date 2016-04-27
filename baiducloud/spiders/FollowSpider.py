@@ -21,10 +21,10 @@ class FollowSpider(Spider):
             log.msg('count > 0')
             return [scrapy.FormRequest(self.wap_follow_url.format(uk=row['uk'], start=0), callback=self.parse)
                     #get user not crawled share
-                    for row in db.query('select * from bc_user where follow_crawled = 0')]
+                    for row in db.query('select * from bc_user where follow_crawled = 0 limit 1000')]
         else:
             log.msg('count == 0 ,default')
-            return [scrapy.FormRequest(self.wap_follow_url.format(uk=1208824379, start=0), callback=self.parse)]
+            return [scrapy.FormRequest(self.wap_follow_url.format(uk=3409247005, start=0), callback=self.parse)]
 
     def parse(self, response):
         uk = re.findall(r'uk=(\d+)', response.request.url)[0]
