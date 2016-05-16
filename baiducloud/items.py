@@ -23,3 +23,12 @@ class ResourceItem(scrapy.Item):
     v_cnt = scrapy.Field()
     d_cnt = scrapy.Field()
     t_cnt = scrapy.Field()
+
+
+class ProxyItem(scrapy.Item):
+    ip = scrapy.Field()
+    port = scrapy.Field()
+    position = scrapy.Field()
+    type = scrapy.Field()
+    speed = scrapy.Field()
+    last_check_time = scrapy.Field()

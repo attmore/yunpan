@@ -64,6 +64,7 @@ NEWSPIDER_MODULE = 'baiducloud.spiders'
 ITEM_PIPELINES = {
     'baiducloud.pipelines.UserPipeline': 1,
     'baiducloud.pipelines.ResourcePipeline': 2,
+    'baiducloud.pipelines.ProxyPipeline': 3,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

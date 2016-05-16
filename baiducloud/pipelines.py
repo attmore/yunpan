@@ -6,11 +6,12 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from scrapy import log
 
-from baiducloud.items import UserItem, ResourceItem
+from baiducloud.items import UserItem, ResourceItem, ProxyItem
 from baiducloud import db
 
 
 class UserPipeline(object):
+
     def process_item(self, item, spider):
         if isinstance(item, UserItem):
             sql = 'insert into bc_user (uk, share_crawled, follow_crawled,follow_num) values ( %s, %s, %s,%s) ON DUPLICATE KEY UPDATE follow_num = follow_num + 1;'
@@ -22,11 +23,10 @@ class UserPipeline(object):
 
 
 class ResourcePipeline(object):
+
     def process_item(self, item, spider):
         if isinstance(item, ResourceItem):
-            sql = ('insert into resource'
-                   '(url, title, feed_time, feed_username, feed_user_uk, size, v_cnt, d_cnt, t_cnt)'
-                   'values (%s, %s, %s, %s, %s, %s, %s, %s, %s)')
+            sql = 'insert into resource(url, title, feed_time, feed_username, feed_user_uk, size, v_cnt, d_cnt, t_cnt) values (%s, %s, %s, %s, %s, %s, %s, %s, %s)'
 
             try:
                 db.insert(sql,
@@ -42,4 +42,22 @@ class ResourcePipeline(object):
             except Exception as e:
                 log.msg(e)
 
+        return item
+
+
+class ProxyPipeline(object):
+
+    def process_item(self, item, spider):
+        if isinstance(item, ProxyItem):
+            sql = 'insert into proxy (ip,port,position,type,speed,last_check_time) values ( %s, %s, %s,%s,%s,%s)'
+            try:
+                db.insert(sql,
+                          item.get('ip'),
+                          item.get('port'),
+                          item.get('position'),
+                          item.get('type'),
+                          item.get('speed'),
+                          item.get('last_check_time'))
+            except Exception as e:
+                log.msg(e)
         return item

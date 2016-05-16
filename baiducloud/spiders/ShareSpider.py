@@ -20,13 +20,12 @@ class ShareSpider(Spider):
     share_referer_url = 'http://yun.baidu.com/share/home?uk={uk}&view=share'
 
     def start_requests(self):
-        rows = db.query('select uk from bc_user where share_crawled=0 limit 100')
-        for row in rows:
-            db.update('update bc_user set share_crawled=1 where uk=%s', row['uk'])
+        rows = db.query('select uk from bc_user where share_crawled=0 limit 10')
         return [scrapy.FormRequest(self.share_url.format(uk=row['uk'], start=0), callback=self.parse) for row in rows]
 
     def parse(self, response):
         uk = re.findall(r'uk=(\d+)', response.request.url)[0]
+        db.update('update bc_user set share_crawled=1 where uk=%s', uk)
         try:
             total_count = int(json.loads(response.body)['total_count'])
         except KeyError as e:
