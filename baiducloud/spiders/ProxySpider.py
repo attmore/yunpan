@@ -14,7 +14,7 @@ class ProxySpider(Spider):
     def start_requests(self):
         # get top 10 page
         return [scrapy.FormRequest(self.proxy_url_list.format(page_num=page), callback=self.parse) for page in
-                range(1, 2)]
+                range(1, 11)]
 
     def parse(self, response):
         #
